@@ -1,40 +1,39 @@
-
-import React, { useState } from 'react';
-import './App.css';
-import productData from './products.json';
+import React, { useState } from "react";
+import "./App.css";
+import productData from "./products.json";
+import ProductCard from "./components/ProductCard";
+import SearchBar from "./components/SearchBar";
 
 function App() {
   const [products, setProducts] = useState(productData);
 
   const handleDelete = (id) => {
-    const remaining = products.filter(elem => elem._id !== id);
+    const remaining = products.filter((elem) => elem._id !== id);
     setProducts(remaining);
-  }
+  };
 
-  const handleSearch = (e) => {
-    if (e.target.value === '') {
+  const handleSearch = (searchValue) => {
+    if (searchValue === "") {
       setProducts(productData);
     } else {
-      const filtered = productData.filter(elem => elem.name.toLowerCase().includes((e.target.value).toLowerCase()));
+      const filtered = productData.filter((elem) =>
+        elem.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
       setProducts(filtered);
     }
-  }
+  };
 
   return (
     <div className="cart">
       <h1>My shopping cart</h1>
-      <input type="text" placeholder="🔎" onChange={(e) => handleSearch(e)} />
-      {products.map(elem => {
+      <SearchBar onSearch={handleSearch} />
+      {products.map((elem) => {
         return (
-          <div key={elem._id}>
-            <p>{elem.name}</p>
-            <button onClick={() => handleDelete(elem._id)}>Delete</button>
-          </div>
-        )
+          <ProductCard key={elem._id} info={elem} onDelete={handleDelete} />
+        );
       })}
     </div>
   );
 }
 
 export default App;
-
